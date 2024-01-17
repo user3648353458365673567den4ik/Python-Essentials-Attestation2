@@ -44,26 +44,29 @@ class FileWorker(Singleton):
         :return: Method doesn't return anything
         """
         self.__print_log("File open process (get_all_numbers_from_file) has started.")
-        with open(self.input_file, 'r') as file:  # открытие файла для чтения с помощью менеджера контекста
-            self.all_numbers = []
-            file_end = False
+        try:
+            with open(self.input_file, 'r') as file:  # открытие файла для чтения с помощью менеджера контекста
+                self.all_numbers = []
+                file_end = False
 
-            while not file_end:  # итерация всех строчек файла
-                number = file.readline()
-                if not number:  # условие, существует ли строка
-                    file_end = True
-                    break
+                while not file_end:  # итерация всех строчек файла
+                    number = file.readline()
+                    if not number:  # условие, существует ли строка
+                        file_end = True
+                        break
 
-                try:
-                    number = int(number)  # конвертация в int
-                except ValueError:
-                    self.__print_log("Incorrect value to convert to int, continued...")
-                    continue
+                    try:
+                        number = int(number)  # конвертация в int
+                    except ValueError:
+                        self.__print_log("Incorrect value to convert to int, continued...")
+                        continue
 
-                self.__print_log(f"Number was added to list: {number}")
-                self.all_numbers.append(number)  # добавление числа в поле класса
+                    self.__print_log(f"Number was added to list: {number}")
+                    self.all_numbers.append(number)  # добавление числа в поле класса
 
-            self.__print_log("File open process (get_all_numbers_from_file) has stopped.")
+                self.__print_log("File open process (get_all_numbers_from_file) has stopped.")
+        except FileNotFoundError:
+            self.__print_log(f"ERROR: File {self.input_file} was not found.")
 
     # служебный метод для сохранения текущего сохраненного результата в выходной файл
     def __save_result(self, update_data=False):
